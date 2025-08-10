@@ -1,3 +1,4 @@
+import 'package:ewallet/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -6,40 +7,98 @@ class SignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
-      appBar: AppBar(title: const Text('Sign Up')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Sign Up',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            const TextField(
-              decoration: InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const TextField(
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Handle login logic here
-              },
-              child: const Text('Signup'),
-            ),
-          ],
+      backgroundColor: const Color.fromARGB(255, 97, 26, 125),
+      appBar: AppBar(
+        toolbarHeight: 100,
+        title: const Text('Sign Up'),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
         ),
+        backgroundColor: const Color.fromARGB(255, 97, 26, 125),
+        elevation: 0,
+      ),
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
+        padding: const EdgeInsets.all(20),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              Text(
+                'Cash Share!',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 97, 26, 125),
+                ),
+              ),
+              const SizedBox(height: 150),
+
+              const SizedBox(height: 10),
+              Text(
+                'Sign Up',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 97, 26, 125),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const TextField(
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  fillColor: Color.fromARGB(255, 244, 244, 244),
+                  filled: true,
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const TextField(
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  fillColor: Color.fromARGB(255, 244, 244, 244),
+                  filled: true,
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(300, 50),
+                  backgroundColor: const Color.fromARGB(255, 89, 28, 114),
+                  textStyle: TextStyle(color: Color(0xFFFFFFFF)),
+                ),
+                child: const Text('Sign Up'),
+              ),
+              const SizedBox(height: 125),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.replace(
+            context,
+            oldRoute: ModalRoute.of(context)!,
+            newRoute: MaterialPageRoute(
+              builder: (context) => const LoginScreen(),
+            ),
+          );
+        },
+        backgroundColor: const Color.fromARGB(255, 97, 26, 125),
+        child: const Icon(Icons.arrow_back, color: Colors.white),
       ),
     );
   }
