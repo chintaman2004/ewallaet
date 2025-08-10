@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'cashshare-75637.firebasestorage.app',
     measurementId: 'G-8RD10HZY5X',
   );
+
 }

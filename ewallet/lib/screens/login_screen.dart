@@ -1,138 +1,139 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ewallet/screens/homescreen.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
+import 'signup_screen.dart';
+import 'forgot_password_screen.dart';
+import 'package:ewallet/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _emailC = TextEditingController();
+  final _passC = TextEditingController();
 
-  bool isLoading = false;
-  String errorMessage = '';
+  @override
+  void dispose() {
+    _emailC.dispose();
+    _passC.dispose();
+    super.dispose();
+  }
 
-  Future<void> loginUser() async {
-    setState(() {
-      isLoading = true;
-      errorMessage = '';
-    });
-
-    try {
-      await _auth.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-
-      // ✅ Navigate to HomeScreen after successful login
+  void _login(AuthProvider auth) async {
+    if (!_formKey.currentState!.validate()) return;
+    await auth.signIn(email: _emailC.text.trim(), password: _passC.text.trim());
+    if (auth.error != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(auth.error!)));
+    } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Homescreen()),
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message ?? 'Login failed';
-      });
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 97, 26, 125),
-      appBar: AppBar(
-        toolbarHeight: 100,
-        title: const Text('Login'),
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-        backgroundColor: const Color.fromARGB(255, 97, 26, 125),
-        elevation: 0,
-      ),
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
-        ),
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              const Text(
-                'Cash Share!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 97, 26, 125),
-                ),
-              ),
-              const SizedBox(height: 150),
-              const Text(
-                'Login',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 97, 26, 125),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  fillColor: Color.fromARGB(255, 244, 244, 244),
-                  filled: true,
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  fillColor: Color.fromARGB(255, 244, 244, 244),
-                  filled: true,
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 20),
-              if (errorMessage.isNotEmpty)
-                Text(errorMessage, style: const TextStyle(color: Colors.red)),
-              const SizedBox(height: 10),
-              isLoading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: loginUser,
-                      style: ElevatedButton.styleFrom(
-                        fixedSize: const Size(300, 50),
-                        backgroundColor: const Color.fromARGB(255, 89, 28, 114),
-                        textStyle: const TextStyle(color: Colors.white),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+          children: [
+            Row(
+              children: [
+                IconButton(onPressed: () {}, icon: const Icon(Icons.close)),
+                const Spacer(),
+              ],
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Welcome back',
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Sign in to continue to your wallet',
+              style: TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(height: 28),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _emailC,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                    validator: (v) =>
+                        (v == null || v.isEmpty) ? 'Enter email' : null,
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _passC,
+                    obscureText: true,
+                    decoration: const InputDecoration(labelText: 'Password'),
+                    validator: (v) => (v == null || v.length < 6)
+                        ? 'Password min 6 chars'
+                        : null,
+                  ),
+                  const SizedBox(height: 20),
+                  auth.isLoading
+                      ? const CircularProgressIndicator()
+                      : SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () => _login(auth),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              child: Text('Sign In'),
+                            ),
+                          ),
+                        ),
+                  const SizedBox(height: 12),
+                  TextButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ForgotPasswordScreen(),
                       ),
-                      child: const Text('Login'),
                     ),
-              const SizedBox(height: 125),
-            ],
-          ),
+                    child: const Text('Forgot password?'),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: const [
+                      Expanded(child: Divider()),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        child: Text('OR'),
+                      ),
+                      Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  OutlinedButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SignupScreen()),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Text('Create account'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
