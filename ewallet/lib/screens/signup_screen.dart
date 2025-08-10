@@ -1,8 +1,50 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:ewallet/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  bool isLoading = false;
+  String errorMessage = '';
+
+  Future<void> signUpUser() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
+
+    try {
+      await _auth.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message ?? 'Sign up failed';
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +85,6 @@ class SignupScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 150),
-
               const SizedBox(height: 10),
               Text(
                 'Sign Up',
@@ -54,8 +95,9 @@ class SignupScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(
                   labelText: 'Email',
                   fillColor: Color.fromARGB(255, 244, 244, 244),
                   filled: true,
@@ -63,8 +105,9 @@ class SignupScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: passwordController,
+                decoration: const InputDecoration(
                   labelText: 'Password',
                   fillColor: Color.fromARGB(255, 244, 244, 244),
                   filled: true,
@@ -73,15 +116,20 @@ class SignupScreen extends StatelessWidget {
                 obscureText: true,
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(300, 50),
-                  backgroundColor: const Color.fromARGB(255, 89, 28, 114),
-                  textStyle: TextStyle(color: Color(0xFFFFFFFF)),
-                ),
-                child: const Text('Sign Up'),
-              ),
+              if (errorMessage.isNotEmpty)
+                Text(errorMessage, style: const TextStyle(color: Colors.red)),
+              const SizedBox(height: 10),
+              isLoading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: signUpUser,
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(300, 50),
+                        backgroundColor: const Color.fromARGB(255, 89, 28, 114),
+                        textStyle: const TextStyle(color: Colors.white),
+                      ),
+                      child: const Text('Sign Up'),
+                    ),
               const SizedBox(height: 125),
             ],
           ),
