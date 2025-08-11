@@ -3,69 +3,69 @@ import 'package:flutter/material.dart';
 
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? user;
-  bool isLoading = false;
-  String? error;
+
+  User? _user;
+  User? get user => _user;
 
   AuthProvider() {
-    _auth.authStateChanges().listen(_onAuthStateChanged);
-  }
-
-  void _onAuthStateChanged(User? u) {
-    user = u;
-    notifyListeners();
-  }
-
-  Future<void> signUp({required String email, required String password}) async {
-    try {
-      isLoading = true;
-      error = null;
+    _auth.authStateChanges().listen((firebaseUser) {
+      _user = firebaseUser;
       notifyListeners();
+    });
+  }
+
+  get currentUser => null;
+
+  Future<String?> signup(
+    String trim,
+    String trim1,
+    String trim2, {
+    required String email,
+    required String password,
+  }) async {
+    try {
       await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      return null; // success
     } on FirebaseAuthException catch (e) {
-      error = e.message;
+      return e.message ?? "Signup failed";
     } catch (e) {
-      error = e.toString();
-    } finally {
-      isLoading = false;
-      notifyListeners();
+      return "Something went wrong";
     }
   }
 
-  Future<void> signIn({required String email, required String password}) async {
+  Future<String?> login(
+    String trim,
+    String trim1, {
+    required String email,
+    required String password,
+  }) async {
     try {
-      isLoading = true;
-      error = null;
-      notifyListeners();
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return null; // success
     } on FirebaseAuthException catch (e) {
-      error = e.message;
+      return e.message ?? "Login failed";
     } catch (e) {
-      error = e.toString();
-    } finally {
-      isLoading = false;
-      notifyListeners();
+      return "Something went wrong";
     }
   }
 
-  Future<void> sendPasswordReset({required String email}) async {
-    try {
-      isLoading = true;
-      error = null;
-      notifyListeners();
-      await _auth.sendPasswordResetEmail(email: email);
-    } on FirebaseAuthException catch (e) {
-      error = e.message;
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
-  }
-
+  // Logout
   Future<void> signOut() async {
     await _auth.signOut();
+  }
+
+  // Send password reset email
+  Future<String?> sendPasswordReset(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      return null; // success
+    } on FirebaseAuthException catch (e) {
+      return e.message ?? "Password reset failed";
+    } catch (e) {
+      return "Something went wrong";
+    }
   }
 }

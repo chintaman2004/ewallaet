@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
 
-class SendMoneyScreen extends StatefulWidget {
-  const SendMoneyScreen({super.key});
+class RequestMoneyScreen extends StatefulWidget {
+  const RequestMoneyScreen({super.key});
 
   @override
-  State<SendMoneyScreen> createState() => _SendMoneyScreenState();
+  State<RequestMoneyScreen> createState() => _RequestMoneyScreenState();
 }
 
-class _SendMoneyScreenState extends State<SendMoneyScreen> {
+class _RequestMoneyScreenState extends State<RequestMoneyScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _recipientController = TextEditingController();
+  final _fromController = TextEditingController();
   final _amountController = TextEditingController();
+  final _noteController = TextEditingController();
 
   @override
   void dispose() {
-    _recipientController.dispose();
+    _fromController.dispose();
     _amountController.dispose();
+    _noteController.dispose();
     super.dispose();
   }
 
-  void _sendMoney() {
+  void _requestMoney() {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Money sent successfully!")));
-      _recipientController.clear();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Money request sent successfully!")),
+      );
+      _fromController.clear();
       _amountController.clear();
+      _noteController.clear();
     }
   }
 
@@ -51,7 +54,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   Text(
-                    "Send Money",
+                    "Request Money",
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -60,7 +63,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Enter recipient and amount below",
+                    "Fill in the details below",
                     style: TextStyle(fontSize: 16, color: Colors.white70),
                   ),
                 ],
@@ -87,14 +90,14 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                 child: Column(
                   children: [
                     TextFormField(
-                      controller: _recipientController,
+                      controller: _fromController,
                       decoration: const InputDecoration(
-                        labelText: "Recipient Email or ID",
+                        labelText: "From (Email or ID)",
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please enter recipient details";
+                          return "Please enter who you are requesting from";
                         }
                         return null;
                       },
@@ -118,14 +121,26 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                         return null;
                       },
                     ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _noteController,
+                      decoration: const InputDecoration(
+                        labelText: "Note (optional)",
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 2,
+                    ),
                     const SizedBox(height: 30),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6A1B9A),
                         minimumSize: const Size(double.infinity, 50),
                       ),
-                      onPressed: _sendMoney,
-                      child: const Text("Send", style: TextStyle(fontSize: 18)),
+                      onPressed: _requestMoney,
+                      child: const Text(
+                        "Request",
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
                   ],
                 ),

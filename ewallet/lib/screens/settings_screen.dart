@@ -1,18 +1,10 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/auth_provider.dart';
-import 'login_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    final user = authProvider.currentUser;
-
     return Scaffold(
       backgroundColor: const Color(0xFF6A1B9A),
       body: Column(
@@ -31,27 +23,19 @@ class ProfileScreen extends StatelessWidget {
             child: SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    "My Profile",
+                children: const [
+                  Text(
+                    "Settings",
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.white,
-                    backgroundImage: const NetworkImage(
-                      "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-                    ),
-                  ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   Text(
-                    user?.email ?? "User Email",
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                    "Manage your app preferences",
+                    style: TextStyle(fontSize: 16, color: Colors.white70),
                   ),
                 ],
               ),
@@ -60,7 +44,7 @@ class ProfileScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // White body
+          // White content area
           Expanded(
             child: Container(
               width: double.infinity,
@@ -72,36 +56,56 @@ class ProfileScreen extends StatelessWidget {
                   topRight: Radius.circular(40),
                 ),
               ),
-              child: Column(
+              child: ListView(
                 children: [
                   ListTile(
-                    leading: const Icon(Icons.email, color: Colors.purple),
-                    title: Text(user?.email ?? "Email not available"),
-                  ),
-                  const Divider(),
-                  ListTile(
-                    leading: const Icon(
-                      Icons.account_circle,
-                      color: Colors.purple,
-                    ),
-                    title: const Text("Account Settings"),
+                    leading: const Icon(Icons.lock, color: Colors.purple),
+                    title: const Text("Change Password"),
                     onTap: () {
-                      // Navigate to settings screen
+                      // Navigate to change password screen
                     },
                   ),
                   const Divider(),
                   ListTile(
-                    leading: const Icon(Icons.logout, color: Colors.red),
-                    title: const Text(
-                      "Logout",
-                      style: TextStyle(color: Colors.red),
+                    leading: const Icon(Icons.palette, color: Colors.purple),
+                    title: const Text("Theme"),
+                    onTap: () {
+                      // Theme selection logic
+                    },
+                  ),
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.notifications,
+                      color: Colors.purple,
                     ),
-                    onTap: () async {
-                      await authProvider.signOut();
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (_) => const LoginScreen()),
-                        (route) => false,
+                    title: const Text("Notifications"),
+                    onTap: () {
+                      // Notification settings
+                    },
+                  ),
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.language, color: Colors.purple),
+                    title: const Text("Language"),
+                    onTap: () {
+                      // Language selection
+                    },
+                  ),
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.info, color: Colors.purple),
+                    title: const Text("About"),
+                    onTap: () {
+                      showAboutDialog(
+                        context: context,
+                        applicationName: "Cash Share",
+                        applicationVersion: "1.0.0",
+                        children: const [
+                          Text(
+                            "Cash Share is a secure and easy way to send and receive money.",
+                          ),
+                        ],
                       );
                     },
                   ),

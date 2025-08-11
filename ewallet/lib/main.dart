@@ -1,19 +1,42 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: unused_import
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import 'firebase_options.dart';
+import 'providers/auth_provider.dart';
 import 'screens/splash_screen.dart';
-import 'screens/login_screen.dart';
-import 'screens/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+
+  if (kIsWeb) {
+    // Web initialization
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: "AIzaSyBEPXweDV3lOqS2PPIjD1ltyPZ-pKE6joM",
+        authDomain: "cashshare-75637.firebaseapp.com",
+        projectId: "cashshare-75637",
+        storageBucket: "cashshare-75637.appspot.com",
+        messagingSenderId: "964805488289",
+        appId: "1:964805488289:web:17f976b6d607e1f3270ae0",
+        measurementId: "G-R3CLB4M399",
+      ),
+    );
+  } else {
+    // Mobile initialization
+    await Firebase.initializeApp();
+  }
+
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
+      child: const MyApp(),
+    ),
+  );
 }
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -21,67 +44,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "Cash Share",
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-      title: 'E-Wallet',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
-        scaffoldBackgroundColor: Colors.white,
-        fontFamily: 'Roboto',
+        primaryColor: const Color(0xFF6A1B9A),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: const Color(0xFF6A1B9A),
+          secondary: const Color(0xFFF48FB1),
+        ),
+        textTheme: Theme.of(context).textTheme.apply(fontFamily: 'Poppins'),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF6A1B9A),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
       ),
-      // Show splash first
-      home: const SplashWrapper(),
-    );
-  }
-}
-
-class SplashWrapper extends StatefulWidget {
-  const SplashWrapper({super.key});
-
-  @override
-  State<SplashWrapper> createState() => _SplashWrapperState();
-}
-
-class _SplashWrapperState extends State<SplashWrapper> {
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const AuthGate()),
-      );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const SplashScreen();
-  }
-}
-
-class AuthGate extends StatelessWidget {
-  const AuthGate({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        // Show loading spinner while connecting
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
-
-        // If logged in → go to Home
-        if (snapshot.hasData) {
-          return const HomeScreen();
-        }
-
-        // Not logged in → go to Login
-        return const LoginScreen();
-      },
+      home: const SplashScreen(),
     );
   }
 }
