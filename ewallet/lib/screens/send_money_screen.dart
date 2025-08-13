@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class SendMoneyScreen extends StatefulWidget {
-  const SendMoneyScreen({super.key});
+  const SendMoneyScreen({
+    super.key,
+    required Map<String, dynamic> initialRecipient,
+  });
 
   @override
   State<SendMoneyScreen> createState() => _SendMoneyScreenState();
