@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'transaction_history_screen.dart';
 import 'profile_screen.dart';
 import 'payments_history_screen.dart';
+import 'more_menu.dart';
 =======
 // lib/screens/home_screen.dart
 // ignore_for_file: non_constant_identifier_names
@@ -19,6 +20,7 @@ import 'profile_screen.dart';
 import 'settings_screen.dart';
 import 'bank_selection_screen.dart';
 import 'select_friend_screen.dart';
+import 'more_menu.dart';
 >>>>>>> 1d5627f01ba6a4f288c44da132574c621fe1480b
 
 class HomeScreen extends StatefulWidget {
