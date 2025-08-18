@@ -1,7 +1,11 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "cmake.sourceDirectory": "D:/AHC/ewallaet/ewallet/windows"
 =======
     "cmake.sourceDirectory": "D:/AHC/ewallaet/windows"
 >>>>>>> 1d5627f (.....)
+=======
+    "cmake.sourceDirectory": "D:/AHC/ewallaet/windows"
+>>>>>>> 1d5627f01ba6a4f288c44da132574c621fe1480b
 }
