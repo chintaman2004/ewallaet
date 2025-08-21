@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-// ignore_for_file: unused_local_variable, use_build_context_synchronously
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names, unused_local_variable, use_build_context_synchronously
 
 import 'package:ewallet/screens/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = true);
 
     try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
@@ -43,15 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
-=======
-import 'package:flutter/material.dart';
-import 'signup_screen.dart';
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-
-  @override
->>>>>>> 1d5627f01ba6a4f288c44da132574c621fe1480b
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -61,19 +51,11 @@ class LoginScreen extends StatelessWidget {
             clipper: CurveClipper(),
             child: Container(
               height: 200,
-<<<<<<< HEAD
               color: const Color(0xFF6A1B9A),
               child: const Center(
                 child: Text(
                   "CashEase",
                   style: TextStyle(
-=======
-              color: const Color(0xFF6A1B9A), // Purple shade
-              child: Center(
-                child: Text(
-                  "CashEase",
-                  style: const TextStyle(
->>>>>>> 1d5627f01ba6a4f288c44da132574c621fe1480b
                     color: Colors.white,
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
@@ -85,10 +67,7 @@ class LoginScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-<<<<<<< HEAD
-=======
           // Login Form
->>>>>>> 1d5627f01ba6a4f288c44da132574c621fe1480b
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
@@ -96,10 +75,7 @@ class LoginScreen extends StatelessWidget {
               children: [
                 const Text("Email"),
                 TextField(
-<<<<<<< HEAD
                   controller: _emailController,
-=======
->>>>>>> 1d5627f01ba6a4f288c44da132574c621fe1480b
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                   ),
@@ -108,10 +84,7 @@ class LoginScreen extends StatelessWidget {
 
                 const Text("Password"),
                 TextField(
-<<<<<<< HEAD
                   controller: _passwordController,
-=======
->>>>>>> 1d5627f01ba6a4f288c44da132574c621fe1480b
                   obscureText: true,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
@@ -119,10 +92,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
 
-<<<<<<< HEAD
-=======
                 // Login Button
->>>>>>> 1d5627f01ba6a4f288c44da132574c621fe1480b
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -133,7 +103,6 @@ class LoginScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(25),
                       ),
                     ),
-<<<<<<< HEAD
                     onPressed: _loading ? null : _loginUser,
                     child: _loading
                         ? const CircularProgressIndicator(color: Colors.white)
@@ -141,13 +110,6 @@ class LoginScreen extends StatelessWidget {
                             "Login",
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
-=======
-                    onPressed: () {},
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
->>>>>>> 1d5627f01ba6a4f288c44da132574c621fe1480b
                   ),
                 ),
 
@@ -178,10 +140,7 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-<<<<<<< HEAD
-=======
 // Custom curve clipper
->>>>>>> 1d5627f01ba6a4f288c44da132574c621fe1480b
 class CurveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {

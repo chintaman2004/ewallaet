@@ -6,7 +6,7 @@ class MoreMenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF3E2C6D), // Purple background
+      backgroundColor: const Color(0xFF3E2C6D),
       body: SafeArea(
         child: Column(
           children: [
@@ -25,15 +25,84 @@ class MoreMenuPage extends StatelessWidget {
                       _buildSectionTitle('Main Menu'),
                       const SizedBox(height: 8),
                       _buildGrid([
-                        'Top-up', 'Loan', 'Withdraw', 'Rewards',
+                        {
+                          "title": "Top-up",
+                          "icon":
+                              "https://img.icons8.com/color/96/money-transfer.png",
+                        },
+                        {
+                          "title": "Loan",
+                          "icon":
+                              "https://img.icons8.com/color/96/request-money.png",
+                        },
+                        {
+                          "title": "Withdraw",
+                          "icon":
+                              "https://img.icons8.com/color/96/cash-withdrawal.png",
+                        },
+                        {
+                          "title": "Rewards",
+                          "icon": "https://img.icons8.com/color/96/prize.png",
+                        },
                       ]),
                       const SizedBox(height: 16),
                       _buildSectionTitle('Payment List'),
                       const SizedBox(height: 8),
                       _buildGrid([
-                        'Telco Loan', 'Cashout', 'Bill & Top-up', 'Loaner',
-                        'Healthcare', 'Entertainment', 'Groceries & Shopping', 'Game Voucher',
-                        'Burger', 'Travel', 'E-Commerce', 'Rent',
+                        {
+                          "title": "Telco Loan",
+                          "icon": "https://img.icons8.com/color/96/phone.png",
+                        },
+                        {
+                          "title": "Cashout",
+                          "icon": "https://img.icons8.com/color/96/wallet.png",
+                        },
+                        {
+                          "title": "Bill & Top-up",
+                          "icon": "https://img.icons8.com/color/96/bill.png",
+                        },
+                        {
+                          "title": "Loaner",
+                          "icon": "https://img.icons8.com/color/96/money.png",
+                        },
+                        {
+                          "title": "Healthcare",
+                          "icon":
+                              "https://img.icons8.com/color/96/hospital.png",
+                        },
+                        {
+                          "title": "Entertainment",
+                          "icon": "https://img.icons8.com/color/96/popcorn.png",
+                        },
+                        {
+                          "title": "Groceries & Shopping",
+                          "icon":
+                              "https://img.icons8.com/color/96/shopping-cart.png",
+                        },
+                        {
+                          "title": "Game Voucher",
+                          "icon":
+                              "https://img.icons8.com/color/96/game-controller.png",
+                        },
+                        {
+                          "title": "Burger",
+                          "icon":
+                              "https://img.icons8.com/color/96/hamburger.png",
+                        },
+                        {
+                          "title": "Travel",
+                          "icon":
+                              "https://img.icons8.com/color/96/airplane.png",
+                        },
+                        {
+                          "title": "E-Commerce",
+                          "icon":
+                              "https://img.icons8.com/color/96/online-store.png",
+                        },
+                        {
+                          "title": "Rent",
+                          "icon": "https://img.icons8.com/color/96/home.png",
+                        },
                       ]),
                     ],
                   ),
@@ -61,7 +130,9 @@ class MoreMenuPage extends StatelessWidget {
             onPressed: () {},
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
             ),
             child: const Text('Certify Now'),
           ),
@@ -90,7 +161,7 @@ class MoreMenuPage extends StatelessWidget {
     );
   }
 
-  Widget _buildGrid(List<String> items) {
+  Widget _buildGrid(List<Map<String, String>> items) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -105,13 +176,20 @@ class MoreMenuPage extends StatelessWidget {
         return Column(
           children: [
             CircleAvatar(
-              radius: 24,
+              radius: 28,
               backgroundColor: const Color(0xFF3E2C6D),
-              child: Icon(Icons.circle, color: Colors.white), // Placeholder icon
+              child: ClipOval(
+                child: Image.network(
+                  items[index]["icon"]!,
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
             const SizedBox(height: 6),
             Text(
-              items[index],
+              items[index]["title"]!,
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 12),
             ),
